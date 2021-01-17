@@ -1,0 +1,82 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+option java_package = "com.xxx.inventory.api";
+option java_outer_classname = "OuterWarehouseInventory";
+option java_multiple_files = true;
+
+
+message ArticleView {
+    int64 id = 1;
+    string name = 2;
+    int32 available = 3;
+}
+
+message ProductArticleLink {
+    int64 articleId = 1;
+    int32 quantity = 2;
+}
+
+message ProductView {
+    int64 id = 1;
+    string name = 2;
+    int64 price = 3;
+    int32 quantity = 4;
+    repeated ProductArticleLink productArticles = 5;
+}
+
+message ListAllProductsCommand {}
+
+message SellProductCommand {
+    int64 id = 1;
+}
+
+message SellProductResult {
+    enum Status {
+        SUCCESS = 0;
+        PRODUCT_NOT_FOUND = 1;
+        NOT_ENOUGH_ARTICLES = 2;
+    }
+    Status status = 1;
+}
+
+message UpdateArticleCommand {
+    int64 id = 1;
+    string name = 2;
+    int32 available = 3;
+}
+
+message UpdateArticleResult {
+    int64 id = 1;
+    enum Status {
+        SUCCESS = 0;
+        WRONG_STOCK_QUANTITY = 1;
+    }
+    Status status = 2;
+}
+
+message UpdateProductCommand {
+    int64 id = 1;
+    string name = 2;
+    int64 price = 3;
+    repeated ProductArticleLink productArticles = 5;
+}
+
+message UpdateProductResult {
+    int64 id = 1;
+    enum Status {
+        SUCCESS = 0;
+        ARTICLE_NOT_FOUND = 1;
+    }
+    Status status = 2;
+}
+
+service InventoryService {
+
+    rpc listProducts (ListAllProductsCommand) returns (stream ProductView) {}
+    rpc sellProduct (SellProductCommand) returns (SellProductResult) {}
+    rpc updateArticles(stream UpdateArticleCommand) returns (stream UpdateArticleResult) {}
+    rpc updateProducts(stream UpdateProductCommand) returns (stream UpdateProductResult) {}
+
+}

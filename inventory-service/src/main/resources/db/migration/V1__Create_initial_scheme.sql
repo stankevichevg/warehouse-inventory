@@ -1,0 +1,20 @@
+CREATE TABLE PRODUCT (
+    id   BIGINT NOT NULL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    price BIGINT NOT NULL
+);
+
+CREATE TABLE ARTICLE (
+    id       BIGINT NOT NULL PRIMARY KEY,
+    name     VARCHAR(255) NOT NULL,
+    available_stock INT NOT NULL DEFAULT 0
+);
+
+CREATE TABLE PRODUCT_HAS_ARTICLE (
+    product_id BIGINT NOT NULL,
+    article_id BIGINT NOT NULL,
+    quantity  INT NOT NULL,
+    FOREIGN KEY (product_id) REFERENCES PRODUCT(id),
+    FOREIGN KEY (article_id) REFERENCES ARTICLE(id),
+    PRIMARY KEY (product_id, article_id)
+);
